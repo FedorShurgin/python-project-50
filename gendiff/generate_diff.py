@@ -1,4 +1,6 @@
 import json
+import yaml
+from pathlib import Path
 
 
 def to_str(value):
@@ -9,9 +11,17 @@ def to_str(value):
     return str(value)
 
 
-def generate_diff(path1, path2):
-    data1 = json.load(open(path1))
-    data2 = json.load(open(path2))
+def parse(path):
+    suffix = Path(path).suffix
+    if suffix == ".json":
+        return json.load(open(path))
+    elif suffix == ".yaml" or suffix == ".yml":
+        return yaml.safe_load(open(path))
+    else:
+        raise Exception("Wrong Extension")
+    
+    
+def generate_diff(data1, data2):
     list_keys = data1.keys() | data2.keys()
     sor_list_keys = sorted(list_keys)
     result = '{\n'
