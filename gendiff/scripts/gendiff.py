@@ -1,5 +1,5 @@
 import argparse
-from gendiff.generate_diff import generate_diff, parse
+from gendiff.generate_diff import generate_diff, parse, building_diff
 
 
 def main():
@@ -12,9 +12,12 @@ def main():
     data1 = parse(args.first_file)
     data2 = parse(args.second_file)
  
+    buid_diff = building_diff(data1, data2)
+    #print(buid_diff)
     
-    diff = generate_diff(data1, data2)
-    print(diff)
+    str_diff = generate_diff(buid_diff, depth=0)
+    print(str_diff)
+    
 
 if __name__ == '__main__':
     main()

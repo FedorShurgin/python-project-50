@@ -19,20 +19,54 @@ def parse(path):
         return yaml.safe_load(open(path))
     else:
         raise Exception("Wrong Extension")
-    
-    
-def generate_diff(data1, data2):
+
+
+def building_diff(data1, data2):
     list_keys = data1.keys() | data2.keys()
     sor_list_keys = sorted(list_keys)
-    result = '{\n'
+    diff = []
     for key in sor_list_keys:
         if key not in data1:
-            result += f'  + {key}: {to_str(data2[key])}\n'
+            diff.append({'key': key, 'value': data2[key], 'status': 'added'})
         elif key not in data2:
-            result += f'  - {key}: {to_str(data1[key])}\n'
+            diff.append({'key': key, 'value': data1[key], 'status': 'deleted'})
         elif data1[key] != data2[key]:
-            result += f'  - {key}: {to_str(data1[key])}\n  + {key}: {to_str(data2[key])}\n'
+            if isinstance(data1[key], dict) and isinstance(data2[key], dict):
+                diff.append({'key': key, 'childrens': building_diff(data1[key], data2[key]), 'status': 'nested'})
+            else:
+                diff.append({'key': key, 'old_value': data1[key], 'new_value': data2[key], 'status': 'changed'})
         else:
-            result += f'    {key}: {to_str(data2[key])}\n'
-    result += '}'
+            diff.append({'key': key, 'value': data2[key], 'status': 'unchanged'})
+    return diff
+    
+    
+def generate_diff(collection, depth):
+    indent = ' ' * (4 * depth)
+    result = '{\n'
+    for elem in collection:
+        if elem['status'] == 'nested':
+            result += f"{indent}    {elem['key']}: "
+            result += generate_diff(elem['childrens'], depth+1)
+        elif elem['status'] == 'added':
+            result += f"{indent}  + {elem['key']}: {print_value(elem['value'], depth+1)}"
+        elif elem['status'] == 'deleted':
+            result += f"{indent}  - {elem['key']}: {print_value(elem['value'], depth+1)}"
+        elif elem['status'] == 'changed':
+            result += f"{indent}  - {elem['key']}: {print_value(elem['old_value'], depth+1)}"
+            result += f"{indent}  + {elem['key']}: {print_value(elem['new_value'], depth+1)}"
+        else:
+            result += f"{indent}    {elem['key']}: {print_value(elem['value'], depth+1)}"
+    result += f"{indent}}}\n"
     return result
+  
+
+def print_value(value, depth):
+    if not isinstance(value, dict):
+        return f"{to_str(value)}\n"
+    indent = ' ' * (4 * depth)
+    result = '{\n'
+    for elem in value:
+        result += f"{indent}    {elem}: "
+        result += print_value(value[elem], depth+1)
+    result += f"{indent}}}\n"
+    return result  
