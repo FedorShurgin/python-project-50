@@ -9,7 +9,7 @@ build:
 	poetry build
 
 tests:
-	python -m pytest tests
+	poetry run pytest tests
 
 lint:
 	poetry run flake8 gendiff
