@@ -69,4 +69,4 @@ def print_value(value, depth):
         result += f"{indent}    {elem}: "
         result += print_value(value[elem], depth+1)
     result += f"{indent}}}\n"
-    return result  
+    return result
