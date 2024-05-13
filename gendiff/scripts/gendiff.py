@@ -1,5 +1,6 @@
 import argparse
-from gendiff.generate_diff import generate_diff, parse
+from gendiff.scripts.generate_diff import generate_diff
+from gendiff.module.parser import parse
 
 
 def main():
@@ -21,3 +22,15 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+'''
+stylish по умолчанию 3 аргумент
+stylish == строка
+фикстуры в тестах 'fixtures'
+файлы из модуля в gendiff
+generate_diff принимает пути
+main с 7 по 14 отдельная функция, эту функцию поместить в парссер(cli.py)
+пакет(папка) formatters - to json to plain to json убрать приставку to
+generate_diff условия сделать отдельной функцией
+функции предикаты переместить в соответсвующие модули
+'''

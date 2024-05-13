@@ -1,6 +1,6 @@
 import pytest
 
-from gendiff.generate_diff import parse
+from gendiff.scripts.generate_diff import parse
 
 
 def test_parse_json():
@@ -23,3 +23,9 @@ def test_parse_yml():
   "follow": False
     }
   assert parse(file_yml) == result
+
+
+'''
+тест на ошибочное расширение(txt)
+тест на ошибочный форматор(wrong format)
+'''
