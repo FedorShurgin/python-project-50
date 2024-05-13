@@ -8,7 +8,11 @@ def to_str(value):
         return 'true'
     elif value is False:
         return 'false'
-    return str(value)
+    elif value is None:
+        return 'null'
+    elif isinstance(value, dict):
+        return '[complex value]'  
+    return f"'{str(value)}'"
 
 
 def print_value(value, depth):
@@ -87,11 +91,11 @@ def format_plain(collection):
             if elem['status'] == 'nested':
                 result += walk(elem['childrens'], current_path)
             elif elem['status'] == 'added':
-                result += f"Property '{current_path}' was added with value: {elem['value']}\n"
+                result += f"Property '{current_path}' was added with value: {to_str(elem['value'])}\n"
             elif elem['status'] == 'deleted':
                 result += f"Property '{current_path}' was removed\n"
             elif elem['status'] == 'changed':
-                result += f"Property '{current_path}' was updated. From {elem['old_value']} to {elem['new_value']}\n"  # noqa: E501
+                result += f"Property '{current_path}' was updated. From {to_str(elem['old_value'])} to {to_str(elem['new_value'])}\n"  # noqa: E501
         return result
     return walk(collection, '')
 
