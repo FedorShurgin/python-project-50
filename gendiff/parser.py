@@ -8,7 +8,6 @@ def parse(path):
     if suffix == ".json":
         return json.load(open(path))
     elif suffix == ".yaml" or suffix == ".yml":
-        #print(yaml.safe_load(open(path)))
         return yaml.safe_load(open(path))
     else:
         raise Exception("Wrong Extension")

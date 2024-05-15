@@ -1,4 +1,13 @@
-from gendiff.module.building_diff import to_str_plain
+def to_str_plain(value):
+    if value is True:
+        return 'true'
+    elif value is False:
+        return 'false'
+    elif value is None:
+        return 'null'
+    elif isinstance(value, dict):
+        return '[complex value]'
+    return f"'{str(value)}'"
 
 
 def format_plain(collection):
@@ -14,7 +23,7 @@ def format_plain(collection):
             if elem['status'] == 'nested':
                 result += walk(elem['childrens'], current_path)
             elif elem['status'] == 'added':
-                result += f"Property '{current_path}' was added with value: {to_str_plain(elem['value'])}\n"
+                result += f"Property '{current_path}' was added with value: {to_str_plain(elem['value'])}\n"  # noqa: E501
             elif elem['status'] == 'deleted':
                 result += f"Property '{current_path}' was removed\n"
             elif elem['status'] == 'changed':

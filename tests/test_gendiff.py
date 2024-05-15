@@ -1,6 +1,6 @@
 import pytest
 
-from gendiff.scripts.generate_diff import parse
+from gendiff.generate_diff import parse
 
 
 def test_parse_json():
