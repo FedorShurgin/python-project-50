@@ -1,4 +1,5 @@
 from gendiff.generate_diff import generate_diff
+import pytest
 
 
 def test_gendiff():
@@ -15,8 +16,18 @@ def test_gendiff():
     result_json.close()
 
 
+def test_format():
+    file1_json = 'tests/fixtures/file3.json'
+    file2_json = 'tests/fixtures/file4.json'
+    with pytest.raises(Exception):
+        generate_diff(file1_json, file2_json, format='qwery')
 
 
+def test_expansion():
+    file1_json = 'tests/fixtures/file3.json'
+    file2_json = 'tests/fixtures/result_stylish.txt'
+    with pytest.raises(Exception):
+        generate_diff(file1_json, file2_json, format='stylish')
 
 
 '''
