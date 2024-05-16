@@ -1,43 +1,21 @@
-def to_str_stylish(value):
+def to_str(value, depth):
     if value is True:
         return 'true'
     elif value is False:
         return 'false'
     elif value is None:
         return 'null'
-    else:
-        return str(value)
-
-
-def print_value(value, depth):
-    if not isinstance(value, dict):
-        return f"{to_str_stylish(value)}\n"
-    indent = ' ' * (4 * depth)
-    result = '{\n'
-    for elem in value:
-        result += f"{indent}    {elem}: "
-        result += print_value(value[elem], depth+1)
-    result += f"{indent}}}\n"
-    return result
-'''
-def to_str_stylish(value, depth):
-    if isinstance(value, dict):
+    elif isinstance(value, dict):
         indent = ' ' * (4 * depth)
         result = '{\n'
         for elem in value:
             result += f"{indent}    {elem}: "
-            result += to_str_stylish(value[elem], depth+1)
-        result += f"{indent}}}\n"
+            result += to_str(value[elem], depth+1) + '\n'
+        result += f"{indent}}}"
         return result
-    elif value is True:
-        return 'true'
-    elif value is False:
-        return 'false'
-    elif value is None:
-        return 'null'
     else:
         return str(value)
-'''
+
 
 def format_stylish(collection, depth=0):
     indent = ' ' * (4 * depth)
@@ -47,13 +25,13 @@ def format_stylish(collection, depth=0):
             result += f"{indent}    {elem['key']}: "
             result += format_stylish(elem['childrens'], depth+1)
         elif elem['status'] == 'added':
-            result += f"{indent}  + {elem['key']}: {print_value(elem['value'], depth+1)}"  # noqa: E501
+            result += f"{indent}  + {elem['key']}: {to_str(elem['value'], depth+1)}\n"  # noqa: E501
         elif elem['status'] == 'deleted':
-            result += f"{indent}  - {elem['key']}: {print_value(elem['value'], depth+1)}"  # noqa: E501
+            result += f"{indent}  - {elem['key']}: {to_str(elem['value'], depth+1)}\n"  # noqa: E501
         elif elem['status'] == 'changed':
-            result += f"{indent}  - {elem['key']}: {print_value(elem['old_value'], depth+1)}"  # noqa: E501
-            result += f"{indent}  + {elem['key']}: {print_value(elem['new_value'], depth+1)}"  # noqa: E501
+            result += f"{indent}  - {elem['key']}: {to_str(elem['old_value'], depth+1)}\n"  # noqa: E501
+            result += f"{indent}  + {elem['key']}: {to_str(elem['new_value'], depth+1)}\n"  # noqa: E501
         else:
-            result += f"{indent}    {elem['key']}: {print_value(elem['value'], depth+1)}"  # noqa: E501
+            result += f"{indent}    {elem['key']}: {to_str(elem['value'], depth+1)}\n"  # noqa: E501
     result += f"{indent}}}\n"
     return result
