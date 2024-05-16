@@ -28,9 +28,3 @@ def test_expansion():
     file2_json = 'tests/fixtures/result_stylish.txt'
     with pytest.raises(Exception):
         generate_diff(file1_json, file2_json, format='stylish')
-
-
-'''
-тест на ошибочное расширение(txt)
-тест на ошибочный форматор(wrong format)
-'''
