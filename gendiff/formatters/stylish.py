@@ -19,7 +19,25 @@ def print_value(value, depth):
         result += print_value(value[elem], depth+1)
     result += f"{indent}}}\n"
     return result
-
+'''
+def to_str_stylish(value, depth):
+    if isinstance(value, dict):
+        indent = ' ' * (4 * depth)
+        result = '{\n'
+        for elem in value:
+            result += f"{indent}    {elem}: "
+            result += to_str_stylish(value[elem], depth+1)
+        result += f"{indent}}}\n"
+        return result
+    elif value is True:
+        return 'true'
+    elif value is False:
+        return 'false'
+    elif value is None:
+        return 'null'
+    else:
+        return str(value)
+'''
 
 def format_stylish(collection, depth=0):
     indent = ' ' * (4 * depth)
