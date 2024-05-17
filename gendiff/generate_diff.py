@@ -1,38 +1,21 @@
-import json
-import yaml
-from pathlib import Path
+from gendiff.building_diff import building_diff
+from gendiff.formatters.stylish import format_stylish
+from gendiff.formatters.plain import format_plain
+from gendiff.formatters.json import format_json
+from gendiff.parser import parse
 
 
-def to_str(value):
-    if value is True:
-        return 'true'
-    elif value is False:
-        return 'false'
-    return str(value)
-
-
-def parse(path):
-    suffix = Path(path).suffix
-    if suffix == ".json":
-        return json.load(open(path))
-    elif suffix == ".yaml" or suffix == ".yml":
-        return yaml.safe_load(open(path))
+def to_format(data, format):
+    if format == "stylish":
+        return format_stylish(data)
+    elif format == "plain":
+        return format_plain(data)
+    elif format == "json":
+        return format_json(data)
     else:
-        raise Exception("Wrong Extension")
-    
-    
-def generate_diff(data1, data2):
-    list_keys = data1.keys() | data2.keys()
-    sor_list_keys = sorted(list_keys)
-    result = '{\n'
-    for key in sor_list_keys:
-        if key not in data1:
-            result += f'  + {key}: {to_str(data2[key])}\n'
-        elif key not in data2:
-            result += f'  - {key}: {to_str(data1[key])}\n'
-        elif data1[key] != data2[key]:
-            result += f'  - {key}: {to_str(data1[key])}\n  + {key}: {to_str(data2[key])}\n'
-        else:
-            result += f'    {key}: {to_str(data2[key])}\n'
-    result += '}'
-    return result
+        raise Exception("Incorrect second argument")
+
+
+def generate_diff(file1, file2, format):
+    data = building_diff(parse(file1), parse(file2))
+    return to_format(data, format)

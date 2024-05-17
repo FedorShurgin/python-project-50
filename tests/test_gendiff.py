@@ -1,60 +1,30 @@
+from gendiff.generate_diff import generate_diff
 import pytest
 
-from gendiff.generate_diff import generate_diff, parse
 
-def test_same():
-    str1 = {
-        "host": "hexlet.io"
-    }
-    str2 = {
-        "host": "hexlet.io"
-    } 
-    result = '''{
-    host: hexlet.io
-}''' 
-    assert generate_diff(str1,str2) == result
-
-
-def test_diff():
-    str1 = {
-  "host": "hexlet.io",
-  "timeout": 50,
-  "proxy": "123.234.53.22",
-  "follow": False
-    }
-    str2 = {
-  "timeout": 20,
-  "verbose": True,
-  "host": "hexlet.io"
-    } 
-    result = '''{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}''' 
-    assert generate_diff(str1,str2) == result
+def test_gendiff():
+    file1_json = 'tests/fixtures/file3.json'
+    file2_json = 'tests/fixtures/file4.json'
+    result_stylish = open('tests/fixtures/result_stylish.txt')
+    result_plain = open('tests/fixtures/result_plain.txt')
+    result_json = open('tests/fixtures/result_json.txt')
+    assert generate_diff(file1_json, file2_json, format='stylish') == result_stylish.read()
+    assert generate_diff(file1_json, file2_json, format='plain') == result_plain.read()
+    assert generate_diff(file1_json, file2_json, format='json') == result_json.read()
+    result_stylish.close()
+    result_plain.close()
+    result_json.close()
 
 
-def test_parse_json():
-  file_json = 'json_file/file1.json'
-  result = {
-  "host": "hexlet.io",
-  "timeout": 50,
-  "proxy": "123.234.53.22",
-  "follow": False
-    }
-  assert parse(file_json) == result
-  
-  
-def test_parse_yml():
-  file_yml = 'json_file/file1.yml'
-  result = {
-  "host": "hexlet.io",
-  "timeout": 50,
-  "proxy": "123.234.53.22",
-  "follow": False
-    }
-  assert parse(file_yml) == result
+def test_format():
+    file1_json = 'tests/fixtures/file3.json'
+    file2_json = 'tests/fixtures/file4.json'
+    with pytest.raises(Exception):
+        generate_diff(file1_json, file2_json, format='qwery')
+
+
+def test_expansion():
+    file1_json = 'tests/fixtures/file3.json'
+    file2_json = 'tests/fixtures/result_stylish.txt'
+    with pytest.raises(Exception):
+        generate_diff(file1_json, file2_json, format='stylish')

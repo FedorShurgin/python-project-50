@@ -1,4 +1,7 @@
 .venv/
 __pycache__/
 dist/
-json_file/
+.pytest_cache/
+.coverage
+coverage.xml
+demo.cast
