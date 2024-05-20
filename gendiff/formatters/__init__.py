@@ -5,9 +5,9 @@ from gendiff.formatters.json import format_json
 
 def format_data(data, format):
     if format == "stylish":
-        return format_stylish(data)
+        return format_stylish(data).strip()
     elif format == "plain":
-        return format_plain(data)
+        return format_plain(data).strip()
     elif format == "json":
         return format_json(data)
     else:
