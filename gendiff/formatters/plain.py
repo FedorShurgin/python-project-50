@@ -5,6 +5,8 @@ def to_str_plain(value):
         return 'false'
     elif value is None:
         return 'null'
+    elif isinstance(value, int):
+        return str(value)
     elif isinstance(value, dict):
         return '[complex value]'
     return f"'{str(value)}'"
